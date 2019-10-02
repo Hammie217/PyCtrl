@@ -183,6 +183,5 @@ def multiChoice(arr,cursorColor="Blue"):
     return positionList
 
 
-valArray=["Choice1","Choice2","Choice3"]
-
-print(*multiChoice(valArray), sep='\n')
+#valArray=["Choice1","Choice2","Choice3"]
+#print(*multiChoice(valArray), sep='\n')
