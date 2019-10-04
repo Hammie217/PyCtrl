@@ -1,4 +1,4 @@
-import sys,tty,termios
+import sys,tty,termios, pytest
 
 def cursorUp(val):
     if(isinstance(val, int)):
@@ -58,7 +58,7 @@ def printList(arr):
         print("  " + arr[i],end="\n\r")
 def hideCursor():
     print("\u001b[?25l",end='')
-def singleChoice(arr,cursorColor="Blue"):
+def singleChoice(arr,cursorColor="Blue",textOrVal="Val"):
     #save terminal settings
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -104,9 +104,11 @@ def singleChoice(arr,cursorColor="Blue"):
     cursorDown(len(arr)-position)
     #Set terminal style back to normal
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return position
-
-def multiChoice(arr,cursorColor="Blue"):
+    if(textOrVal.upper()=="TEXT"):
+        return arr[position]
+    else:
+        return position
+def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T"):
     #save terminal settings
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -132,8 +134,12 @@ def multiChoice(arr,cursorColor="Blue"):
         for i in range(0, len(arr)):
             if(i in positionList):
                 cursorRight(1)
-                setColor("Green")
-                print("✓",end="\r\n")
+                if tickOrCross.upper() =='X':
+                    setColor("Red")
+                    print("✗",end="\r\n")
+                else:
+                    setColor("Green")
+                    print("✓",end="\r\n")
                 setColor("Reset")
             else:
                 cursorRight(1)
@@ -180,8 +186,15 @@ def multiChoice(arr,cursorColor="Blue"):
     print("",end='\n\r')
     #Set terminal style back to normal
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return positionList
-
+    if textOrVal.upper() =="TEXT":
+        posListText = []
+        for i in positionList:
+            posListText.append(arr[i])
+        return posListText
+    else: 
+        return positionList
 
 #valArray=["Choice1","Choice2","Choice3"]
-#print(*multiChoice(valArray), sep='\n')
+#print(*multiChoice(valArray,"Green","Text","X"), sep='\n')
+#valArray=["Choice1","Choice2","Choice3"]
+#print(singleChoice(valArray,"Blue","Text"),)#

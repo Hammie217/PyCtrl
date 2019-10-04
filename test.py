@@ -1,7 +1,11 @@
 import pytest
 from main import *
 
-def testCursorUp():
+def test_Tester(capfd):
+    print("Hello World!")
+    out, err = capfd.readouterr()
+    assert out == "Hello World!\n"
+def test_CursorUp():
     assert cursorUp(0) == -1
     assert cursorUp(-1) == -1
     assert cursorUp(-100) == -1
@@ -11,7 +15,7 @@ def testCursorUp():
     assert cursorUp([1,2]) == -1
     assert cursorUp(1) == 0
     assert cursorUp(5) == 0
-def testCursorDown():
+def test_CursorDown():
     assert cursorDown(0) == -1
     assert cursorDown(-100) == -1
     assert cursorDown(-1) == -1
@@ -21,7 +25,7 @@ def testCursorDown():
     assert cursorDown([1,2]) == -1
     assert cursorDown(1) == 0
     assert cursorDown(5) == 0
-def testCursorRight():
+def test_CursorRight():
     assert cursorRight(0) == -1
     assert cursorRight(-1) == -1
     assert cursorRight(-100) == -1
@@ -31,7 +35,7 @@ def testCursorRight():
     assert cursorRight([1,2]) == -1
     assert cursorRight(1) == 0
     assert cursorRight(5) == 0
-def testCursorLeft():
+def test_CursorLeft():
     assert cursorLeft(0) == -1
     assert cursorLeft(-1) == -1
     assert cursorLeft(-100) == -1
@@ -41,7 +45,7 @@ def testCursorLeft():
     assert cursorLeft([1,2]) == -1
     assert cursorLeft(1) == 0
     assert cursorLeft(5) == 0
-def testSetColor():
+def test_SetColor():
     assert setColor("Red")==0
     print("Red")
     assert setColor("black")==0
@@ -59,15 +63,8 @@ def testSetColor():
     assert setColor(["Hi","Bye"])==-1
     assert setColor(0.1)==-1
     assert setColor('f')==-1
-
-
-
-print("Initiating test")
-testCursorUp()
-testCursorDown()
-testCursorRight()
-testCursorLeft()
-testSetColor()
-
-
-print("Completed Test")
+def test_printList(capfd):
+    arr =["Choice1","Choice2","Choice3"]
+    printList(arr)
+    out, err = capfd.readouterr()
+    assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r"
