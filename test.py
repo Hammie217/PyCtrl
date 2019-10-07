@@ -68,3 +68,6 @@ def test_printList(capfd):
     printList(arr)
     out, err = capfd.readouterr()
     assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r"
+def test_Single(capfd):
+    valArray=["Choice1","Choice2","Choice3"]
+    assert multiChoice(valArray,"Red","Text","fx","Magenta")== -1

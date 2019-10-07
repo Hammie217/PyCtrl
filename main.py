@@ -202,5 +202,5 @@ def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T",otherColo
 
 #valArray=["Choice1","Choice2","Choice3"]
 #print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
-valArray=["Choice1","Choice2","Choice3"]
-print(singleChoice(valArray,"Magenta","Text"),)#
+#valArray=["Choice1","Choice2","Choice3"]
+#print(singleChoice(valArray,"Magenta","Text"),)#
