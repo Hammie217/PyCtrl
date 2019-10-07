@@ -108,7 +108,10 @@ def singleChoice(arr,cursorColor="Blue",textOrVal="Val"):
         return arr[position]
     else:
         return position
-def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T"):
+def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T",otherColor="Green"):
+    if (len(tickOrCross)>1):
+        print("Error: character " +tickOrCross +" Too long")
+        return -1
     #save terminal settings
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -134,12 +137,15 @@ def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T"):
         for i in range(0, len(arr)):
             if(i in positionList):
                 cursorRight(1)
-                if tickOrCross.upper() =='X':
+                if tickOrCross =='X':
                     setColor("Red")
                     print("✗",end="\r\n")
-                else:
+                elif tickOrCross =='T':
                     setColor("Green")
-                    print("✓",end="\r\n")
+                    print("✓",end="\r\n")       
+                else:
+                    setColor(otherColor)
+                    print(tickOrCross,end="\r\n")
                 setColor("Reset")
             else:
                 cursorRight(1)
@@ -195,6 +201,6 @@ def multiChoice(arr,cursorColor="Blue",textOrVal="Val",tickOrCross="T"):
         return positionList
 
 #valArray=["Choice1","Choice2","Choice3"]
-#print(*multiChoice(valArray,"Green","Text","X"), sep='\n')
-#valArray=["Choice1","Choice2","Choice3"]
-#print(singleChoice(valArray,"Blue","Text"),)#
+#print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
+valArray=["Choice1","Choice2","Choice3"]
+print(singleChoice(valArray,"Magenta","Text"),)#
