@@ -3,8 +3,7 @@ python:
   - "3.7"
 install:
   - pip install -r .travis.requirements.txt
-script:/
-  - python main.py
-  - pytest test.py -rA --cov=.
+script:
+  - pytest test.py -rA --cov=main
 after_success:
   - coveralls
