@@ -6,3 +6,5 @@ install:
 script:
   - python main.py
   - pytest test.py -rA
+after_success:
+  - coveralls
