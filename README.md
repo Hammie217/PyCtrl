@@ -4,7 +4,7 @@
 ## Functions:
 ### singleChoice
 Takes 1-3 inputs:
-1 - Array to be listed  
+1 - Array to be listed   
 2 - Set cursor color (See accepted colors below) - Default "Blue"  
 3 - Return array as postion value ("Val") or text ("Text") - Default: "Val"  
 #### Example:

@@ -1,4 +1,4 @@
-import sys,tty,termios, pytest
+import sys,tty,termios
 
 def cursorUp(val):
     if(isinstance(val, int)):
@@ -58,6 +58,8 @@ def printList(arr):
         print("  " + arr[i],end="\n\r")
 def hideCursor():
     print("\u001b[?25l",end='')
+def resetCursor():
+    print("\u001b[?0l",end='')
 def singleChoice(arr,cursorColor="Blue",textOrVal="Val"):
     #save terminal settings
     fd = sys.stdin.fileno()
@@ -104,6 +106,7 @@ def singleChoice(arr,cursorColor="Blue",textOrVal="Val"):
     cursorDown(len(arr)-position)
     #Set terminal style back to normal
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    resetCursor()
     if(textOrVal.upper()=="TEXT"):
         return arr[position]
     else:
