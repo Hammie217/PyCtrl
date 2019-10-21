@@ -82,7 +82,7 @@ def test_multiChoice(mock_set_raw: mock.Mock,
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_multiChoice(mock_set_raw: mock.Mock,
+def test_multiChoice1(mock_set_raw: mock.Mock,
                      mock_tc_get_attr: mock.Mock,
                      mock_tc_set_attr: mock.Mock,
                      mock_sys_read: mock.Mock,
@@ -102,7 +102,7 @@ def test_multiChoice(mock_set_raw: mock.Mock,
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_multiChoice(mock_set_raw: mock.Mock,
+def test_multiChoice2(mock_set_raw: mock.Mock,
                      mock_tc_get_attr: mock.Mock,
                      mock_tc_set_attr: mock.Mock,
                      mock_sys_read: mock.Mock,
@@ -122,7 +122,7 @@ def test_multiChoice(mock_set_raw: mock.Mock,
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_multiChoice(mock_set_raw: mock.Mock,
+def test_multiChoice3(mock_set_raw: mock.Mock,
                      mock_tc_get_attr: mock.Mock,
                      mock_tc_set_attr: mock.Mock,
                      mock_sys_read: mock.Mock,
@@ -145,7 +145,7 @@ def test_multiChoice(mock_set_raw: mock.Mock,
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_singleChoice_given_choices_chooses_choice_three(mock_set_raw: mock.Mock,
+def test_singleChoice_given_choices_chooses_choice_three1(mock_set_raw: mock.Mock,
                                                          mock_tc_get_attr: mock.Mock,
                                                          mock_tc_set_attr: mock.Mock,
                                                          mock_sys_read: mock.Mock,
@@ -165,7 +165,7 @@ def test_singleChoice_given_choices_chooses_choice_three(mock_set_raw: mock.Mock
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_singleChoice_given_choices_chooses_choice_three(mock_set_raw: mock.Mock,
+def test_singleChoice_given_choices_chooses_choice_three2(mock_set_raw: mock.Mock,
                                                          mock_tc_get_attr: mock.Mock,
                                                          mock_tc_set_attr: mock.Mock,
                                                          mock_sys_read: mock.Mock,
