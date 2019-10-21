@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from main import *
 
@@ -38,7 +40,8 @@ def get_print_cursor_value(val, letter):
 
 
 @pytest.mark.parametrize("test_input,expected",
-                         [("Red", 0), ("black", 0), ("WhItE", 0), ("Green", 0), ("RESET", 0), ("Gren", -1),
+                         [("Red", 0), ("black", 0), ("YELLOW", 0), ("MAGENTA", 0), ("CYAN", 0), ("WhItE", 0),
+                          ("Green", 0), ("RESET", 0), ("Gren", -1),
                           ("unknown", -1), (6, -1), ("R", -1), (["Hi", "Bye"], -1), (0.1, -1), ('f', -1),
                           ])
 def test_SetColor(test_input, expected):
@@ -53,7 +56,49 @@ def test_printList_prints_words_to_std_out(capfd):
     assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r"
 
 
-def test_Single(capfd):
+@mock.patch("sys.stdin.fileno")
+@mock.patch("sys.stdin.read")
+@mock.patch("termios.tcgetattr")
+@mock.patch("termios.tcsetattr")
+@mock.patch("tty.setraw")
+def test_multiChoice(mock_set_raw: mock.Mock,
+                     mock_tc_get_attr: mock.Mock,
+                     mock_tc_set_attr: mock.Mock,
+                     mock_sys_read: mock.Mock,
+                     mock_file_no: mock.Mock, capfd):
+    valArray = ["Choice1", "Choice2", "Choice3"]
+    char_down_sequence = [chr(27), chr(91), chr(66)] * 3
+    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
+
+    result = multiChoice(valArray, "Red", "Text", "f", "Magenta")
+
+    out, err = capfd.readouterr()
+    assert get_print_cursor_value(3, "A") in out
+    assert result == []
+
+
+@mock.patch("sys.stdin.fileno")
+@mock.patch("sys.stdin.read")
+@mock.patch("termios.tcgetattr")
+@mock.patch("termios.tcsetattr")
+@mock.patch("tty.setraw")
+def test_singleChoice_given_choices_chooses_choice_three(mock_set_raw: mock.Mock,
+                                                         mock_tc_get_attr: mock.Mock,
+                                                         mock_tc_set_attr: mock.Mock,
+                                                         mock_sys_read: mock.Mock,
+                                                         mock_file_no: mock.Mock, capfd):
+    valArray = ["Choice1", "Choice2", "Choice3"]
+    char_down_sequence = [chr(27), chr(91), chr(66)] * 3
+    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
+
+    result = singleChoice(valArray, "Red", "Text")
+
+    out, err = capfd.readouterr()
+    assert get_print_cursor_value(3, "A") in out
+    assert result == "Choice3"
+
+
+def test_multiChoice_given_tick_or_cross_is_less_than_one():
     valArray = ["Choice1", "Choice2", "Choice3"]
     assert multiChoice(valArray, "Red", "Text", "fx", "Magenta") == -1
 

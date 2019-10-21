@@ -109,6 +109,7 @@ def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
                         setColor("Reset")
                         cursorLeft(1)
                         position += 1
+        enter_not_pressed = charIn != 13
     cursorDown(len(arr) - position)
     # Set terminal style back to normal
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
@@ -169,7 +170,9 @@ def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", other
 
         sys.stdout.flush()
         charIn = ord(sys.stdin.read(1))  # Get input
+        print(charIn)
         if charIn == 13:
+            print(position)
             if position == len(arr):
                 ended = True
                 break
