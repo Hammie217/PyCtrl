@@ -54,6 +54,14 @@ def test_SetColor():
     print("WhItE")
     assert setColor("Green")==0
     print("Green")
+    assert setColor("Yellow")==0
+    print("Yellow")
+    assert setColor("Blue")==0
+    print("Blue")
+    assert setColor("Magenta")==0
+    print("Magenta")
+    assert setColor("Cyan")==0
+    print("Cyan")
     assert setColor("RESET")==0
     print("RESET")
     assert setColor("Gren")==-1
@@ -71,3 +79,13 @@ def test_printList(capfd):
 def test_Single(capfd):
     valArray=["Choice1","Choice2","Choice3"]
     assert multiChoice(valArray,"Red","Text","fx","Magenta")== -1
+def test_hideCursor(capfd):
+    hideCursor()
+    out, err = capfd.readouterr()
+    assert out == '\x1b[?25l'
+
+def test_resetCursor(capfd):
+    resetCursor()
+    out, err = capfd.readouterr()
+    assert out == "\x1b[?0l"
+
