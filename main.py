@@ -55,6 +55,7 @@ def setColor(val):
 def printList(arr):
     for word in arr:
         print(f"  {word}", end="\n\r")
+    cursorUp(len(arr))
 
 
 def hideCursor():
@@ -63,6 +64,37 @@ def hideCursor():
 
 def resetCursor():
     print("\u001b[?0l", end='')
+
+
+def onCharUp(cursorColor, position):
+    if position > 0:
+        print(" ", end="")
+        cursorLeft(1)
+        cursorUp(1)
+        setColor(cursorColor)
+        print(">", end="")
+        setColor("Reset")
+        cursorLeft(1)
+        position -= 1
+    return position
+
+
+
+def onDownChar(arrL, cursorColor, position):
+    if position < arrL:
+        print(" ", end="")
+        cursorLeft(1)
+        cursorDown(1)
+        setColor(cursorColor)
+        print(">", end="")
+        setColor("Reset")
+        cursorLeft(1)
+        position += 1
+    return position
+
+
+def get_input_char():
+    return ord(sys.stdin.read(1))
 
 
 def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
@@ -75,7 +107,6 @@ def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
     charIn = 0
     printList(arr)
     hideCursor()
-    cursorUp(len(arr))
     position = 0
     setColor(cursorColor)
     print(">", end="")
@@ -90,25 +121,9 @@ def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
             if charIn == 91:  # [ pressed
                 charIn = get_input_char()  # Get input
                 if charIn == 65:  # Up
-                    if position > 0:
-                        print(" ", end="")
-                        cursorLeft(1)
-                        cursorUp(1)
-                        setColor(cursorColor)
-                        print(">", end="")
-                        setColor("Reset")
-                        cursorLeft(1)
-                        position -= 1
+                    position = onCharUp(cursorColor, position)
                 elif charIn == 66:  # Down
-                    if position < len(arr) - 1:
-                        print(" ", end="")
-                        cursorLeft(1)
-                        cursorDown(1)
-                        setColor(cursorColor)
-                        print(">", end="")
-                        setColor("Reset")
-                        cursorLeft(1)
-                        position += 1
+                    position = onDownChar(len(arr)-1, cursorColor, position)
         enter_not_pressed = charIn != 13
     cursorDown(len(arr) - position)
     # Set terminal style back to normal
@@ -118,10 +133,6 @@ def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
         return arr[position]
     else:
         return position
-
-
-def get_input_char():
-    return ord(sys.stdin.read(1))
 
 
 def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", otherColor="Green"):
@@ -170,9 +181,8 @@ def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", other
 
         sys.stdout.flush()
         charIn = ord(sys.stdin.read(1))  # Get input
-        print(charIn)
-        if charIn == 13:
-            print(position)
+        
+        if charIn == 13:#Enter
             if position == len(arr):
                 ended = True
                 break
@@ -188,7 +198,7 @@ def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", other
                 if charIn == 65:  # Up
                     position = onCharUp(cursorColor, position)
                 elif charIn == 66:  # Down
-                    position = onDownChar(arr, cursorColor, position)
+                    position = onDownChar(len(arr), cursorColor, position)
     cursorDown(len(arr) - position)
     print("", end='\n\r')
     # Set terminal style back to normal
@@ -202,32 +212,7 @@ def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", other
         return positionList
 
 
-def onCharUp(cursorColor, position):
-    if position > 0:
-        print(" ", end="")
-        cursorLeft(1)
-        cursorUp(1)
-        setColor(cursorColor)
-        print(">", end="")
-        setColor("Reset")
-        cursorLeft(1)
-        position -= 1
-    return position
-
-
-def onDownChar(arr, cursorColor, position):
-    if position < len(arr):
-        print(" ", end="")
-        cursorLeft(1)
-        cursorDown(1)
-        setColor(cursorColor)
-        print(">", end="")
-        setColor("Reset")
-        cursorLeft(1)
-        position += 1
-    return position
-
-# valArray=["Choice1","Choice2","Choice3"]
-# print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
-# valArray=["Choice1","Choice2","Choice3"]
-# print(singleChoice(valArray,"Magenta","Text"),)#
+#valArray=["Choice1","Choice2","Choice3"]
+#print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
+#valArray=["Choice1","Choice2","Choice3"]
+#print(singleChoice(valArray,"Magenta","Text"),)#

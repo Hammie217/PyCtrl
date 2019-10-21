@@ -49,13 +49,26 @@ def test_SetColor(test_input, expected):
     print(test_input)
 
 
+def test_hideCursor(capfd):
+    hideCursor()
+    out, err = capfd.readouterr()
+    assert "\u001b[?25l" in out
+
+
+def test_resetCursor(capfd):
+    resetCursor()
+    out, err = capfd.readouterr()
+    assert "\u001b[?0l" in out
+
+
 def test_printList_prints_words_to_std_out(capfd):
     arr = ["Choice1", "Choice2", "Choice3"]
     printList(arr)
     out, err = capfd.readouterr()
-    assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r"
+    assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r\x1b[3A"
 
 
+#--------------------------------MultiChoice--------------------------------#
 @mock.patch("sys.stdin.fileno")
 @mock.patch("sys.stdin.read")
 @mock.patch("termios.tcgetattr")
@@ -137,8 +150,51 @@ def test_multiChoice3(mock_set_raw: mock.Mock,
     assert "©" in out
     assert result == ["Choice3"]
 
+@mock.patch("sys.stdin.fileno")
+@mock.patch("sys.stdin.read")
+@mock.patch("termios.tcgetattr")
+@mock.patch("termios.tcsetattr")
+@mock.patch("tty.setraw")
+def test_multiChoice4(mock_set_raw: mock.Mock,
+                     mock_tc_get_attr: mock.Mock,
+                     mock_tc_set_attr: mock.Mock,
+                     mock_sys_read: mock.Mock,
+                     mock_file_no: mock.Mock, capfd):
+    valArray = ["Choice1", "Choice2", "Choice3"]
+    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + [chr(13)] +  [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
+    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
 
+    result = multiChoice(valArray, "Red", "Text", "©", "Magenta")
 
+    out, err = capfd.readouterr()
+    assert "©" in out
+    assert result == ["Choice3"]
+
+@mock.patch("sys.stdin.fileno")
+@mock.patch("sys.stdin.read")
+@mock.patch("termios.tcgetattr")
+@mock.patch("termios.tcsetattr")
+@mock.patch("tty.setraw")
+def test_multiChoice5(mock_set_raw: mock.Mock,
+                     mock_tc_get_attr: mock.Mock,
+                     mock_tc_set_attr: mock.Mock,
+                     mock_sys_read: mock.Mock,
+                     mock_file_no: mock.Mock, capfd):
+    valArray = ["Choice1", "Choice2", "Choice3"]
+    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(65)] *2) + ([chr(27), chr(91), chr(66)]*4)
+    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
+
+    result = multiChoice(valArray, "Red", "Text", "©", "Magenta")
+
+    out, err = capfd.readouterr()
+    assert "©" in out
+    assert result == ["Choice3"]
+
+def test_multiChoice_given_tick_or_cross_is_less_than_one():
+    valArray = ["Choice1", "Choice2", "Choice3"]
+    assert multiChoice(valArray, "Red", "Text", "fx", "Magenta") == -1
+
+#--------------------------------SingleChoice--------------------------------#
 
 @mock.patch("sys.stdin.fileno")
 @mock.patch("sys.stdin.read")
@@ -181,18 +237,3 @@ def test_singleChoice_given_choices_chooses_choice_three2(mock_set_raw: mock.Moc
     assert result == 1
 
 
-def test_multiChoice_given_tick_or_cross_is_less_than_one():
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    assert multiChoice(valArray, "Red", "Text", "fx", "Magenta") == -1
-
-
-def test_hideCursor(capfd):
-    hideCursor()
-    out, err = capfd.readouterr()
-    assert "\u001b[?25l" in out
-
-
-def test_resetCursor(capfd):
-    resetCursor()
-    out, err = capfd.readouterr()
-    assert "\u001b[?0l" in out
