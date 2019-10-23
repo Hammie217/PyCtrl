@@ -95,121 +95,59 @@ def test_multiChoice(mock_set_raw: mock.Mock,
 @mock.patch("termios.tcgetattr")
 @mock.patch("termios.tcsetattr")
 @mock.patch("tty.setraw")
-def test_multiChoice1(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
+def test_multichoice_symbol_in(mock_set_raw: mock.Mock,
+                               mock_tc_get_attr: mock.Mock,
+                               mock_tc_set_attr: mock.Mock,
+                               mock_sys_read: mock.Mock,
+                               mock_file_no: mock.Mock, capfd):
+    test_cases = [
+        {
+            "sequence": [chr(27), chr(91), chr(66)] + [chr(13)] + ([chr(27), chr(91), chr(66)]*2),
+            "values": ("Red", "Text", "X", "Magenta"),
+            "symbol": "✗",
+            "result": "Choice2"
+        },
+        {
+            "sequence": ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(66)]*2),
+            "values": ("Red", "Text", "T", "Magenta"),
+            "symbol": "✓",
+            "result": "Choice3"
+        },
+        {
+            "sequence": ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(66)]*2),
+            "values": ("Red", "Text", "©", "Magenta"),
+            "symbol": "©",
+            "result": "Choice3"
+        },
+        {
+            "sequence": ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + [chr(13)] +  [chr(13)] + ([chr(27), chr(91), chr(66)]*2),
+            "values": ("Red", "Text", "©", "Magenta"),
+            "symbol": "©",
+            "result": "Choice3"
+        },
+        {
+            "sequence": ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(65)] *2) + ([chr(27), chr(91), chr(66)]*4),
+            "values": ("Red", "VAL", "©", "Magenta"),
+            "symbol": "©",
+            "result": 2
+        },
+        {
+            "sequence": ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(65)] *2) + ([chr(27), chr(91), chr(66)]*4),
+            "values": ("Red", "Text", "©", "Magenta"),
+            "symbol": "©",
+            "result": "Choice3"
+        }
+    ]
     valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = [chr(27), chr(91), chr(66)] + [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
+    for test_case in test_cases:
+        mock_sys_read.side_effect = test_case["sequence"] + [chr(13)]
 
-    result = multiChoice(valArray, "Red", "Text", "X", "Magenta")
+        result = multiChoice(valArray, *test_case["values"])
 
-    out, err = capfd.readouterr()
-    assert "✗" in out
-    assert result == ["Choice2"]
+        out, err = capfd.readouterr()
+        assert test_case["symbol"] in out
+        assert result == [test_case["result"]]
 
-@mock.patch("sys.stdin.fileno")
-@mock.patch("sys.stdin.read")
-@mock.patch("termios.tcgetattr")
-@mock.patch("termios.tcsetattr")
-@mock.patch("tty.setraw")
-def test_multiChoice2(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
-
-    result = multiChoice(valArray, "Red", "Text", "T", "Magenta")
-
-    out, err = capfd.readouterr()
-    assert "✓" in out
-    assert result == ["Choice3"]
-
-@mock.patch("sys.stdin.fileno")
-@mock.patch("sys.stdin.read")
-@mock.patch("termios.tcgetattr")
-@mock.patch("termios.tcsetattr")
-@mock.patch("tty.setraw")
-def test_multiChoice3(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
-
-    result = multiChoice(valArray, "Red", "Text", "©", "Magenta")
-
-    out, err = capfd.readouterr()
-    assert "©" in out
-    assert result == ["Choice3"]
-
-@mock.patch("sys.stdin.fileno")
-@mock.patch("sys.stdin.read")
-@mock.patch("termios.tcgetattr")
-@mock.patch("termios.tcsetattr")
-@mock.patch("tty.setraw")
-def test_multiChoice4(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + [chr(13)] +  [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
-
-    result = multiChoice(valArray, "Red", "Text", "©", "Magenta")
-
-    out, err = capfd.readouterr()
-    assert "©" in out
-    assert result == ["Choice3"]
-
-@mock.patch("sys.stdin.fileno")
-@mock.patch("sys.stdin.read")
-@mock.patch("termios.tcgetattr")
-@mock.patch("termios.tcsetattr")
-@mock.patch("tty.setraw")
-def test_multiChoice4(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + [chr(13)] +  [chr(13)] + ([chr(27), chr(91), chr(66)]*2)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
-
-    result = multiChoice(valArray, "Red", "VAL", "©", "Magenta")
-
-    out, err = capfd.readouterr()
-    assert "©" in out
-    assert result == [2]
-
-
-@mock.patch("sys.stdin.fileno")
-@mock.patch("sys.stdin.read")
-@mock.patch("termios.tcgetattr")
-@mock.patch("termios.tcsetattr")
-@mock.patch("tty.setraw")
-def test_multiChoice5(mock_set_raw: mock.Mock,
-                     mock_tc_get_attr: mock.Mock,
-                     mock_tc_set_attr: mock.Mock,
-                     mock_sys_read: mock.Mock,
-                     mock_file_no: mock.Mock, capfd):
-    valArray = ["Choice1", "Choice2", "Choice3"]
-    char_down_sequence = ([chr(27), chr(91), chr(66)] *2) + [chr(13)] + ([chr(27), chr(91), chr(65)] *2) + ([chr(27), chr(91), chr(66)]*4)
-    mock_sys_read.side_effect = char_down_sequence + [chr(13)]
-
-    result = multiChoice(valArray, "Red", "Text", "©", "Magenta")
-
-    out, err = capfd.readouterr()
-    assert "©" in out
-    assert result == ["Choice3"]
 
 def test_multiChoice_given_tick_or_cross_is_less_than_one():
     valArray = ["Choice1", "Choice2", "Choice3"]
@@ -256,5 +194,3 @@ def test_singleChoice_given_choices_chooses_choice_three2(mock_set_raw: mock.Moc
     out, err = capfd.readouterr()
     assert get_print_cursor_value(3, "A") in out
     assert result == 1
-
-
