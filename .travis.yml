@@ -1,3 +1,17 @@
+
+sudo: false 
+
+# Blacklist
+branches:
+  only:
+    - master
+
+# Install dependencies
+addons:
+  apt:
+    packages:
+      - doxygen
+
 language: python
 python:
   - "3.7"
@@ -5,5 +19,16 @@ install:
   - pip install -r .travis.requirements.txt
 script:
   - pytest test.py -rA --cov=main
+
 after_success:
   - coveralls
+  - doxygen Doxyfile
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: html
+  github_token: $GH_REPO_TOKEN
+  on:
+    branch: master
+
+
