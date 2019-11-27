@@ -1,7 +1,25 @@
+"""@package docstring
+Documentation for this module.
+ 
+More details.
+"""
 import sys, tty, termios
 
 
 def cursorUp(val):
+    """
+    PURPOSE
+ 
+    Moves console cursor up by defined value
+
+    INPUT
+
+    one integer greater than zero
+
+    RETURNS
+
+    0 for success and -1 for error
+    """
     if isinstance(val, int) and val > 0:
         print_cursor_value(val, "A")
         return 0

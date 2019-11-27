@@ -1,4 +1,4 @@
-# PyCtrl
+# [PyCtrl](http://hammie217.github.io/PyCtrl)
 [![Build Status](https://travis-ci.com/Hammie217/PyCtrl.svg?token=2HV22j5ihLUf9pzgZL6y&branch=master)](https://travis-ci.com/Hammie217/PyCtrl)
 [![Coverage Status](https://coveralls.io/repos/github/Hammie217/PyCtrl/badge.svg?branch=master)](https://coveralls.io/github/Hammie217/PyCtrl?branch=master)
 ## Functions:
