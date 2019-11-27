@@ -1,4 +1,4 @@
-"""@package docstring
+"""@file main.py
 Documentation for this module.
  
 More details.
@@ -90,7 +90,7 @@ def print_cursor_value(val, letter):
     """
     PURPOSE
  
-    Function designed for printing special [ANSI Escape Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Terminal_input_sequences). The value and letter are concatenated to the escape character before being printed to the console.
+    Function designed for printing special @ref ANSI Escape Codes  "https://en.wikipedia.org/wiki/ANSI_escape_code#Terminal_input_sequences". The value and letter are concatenated to the escape character before being printed to the console.
 
     INPUT
 
@@ -193,7 +193,7 @@ def onCharUp(cursorColor, position):
     """
     PURPOSE
  
-    \warning {This function is designed to be private, it may be used elswhere if useful hence the lack of attempt to hide}
+    @warning {This function is designed to be private, it may be used elswhere if useful hence the lack of attempt to hide}
 
     This function sets the curson color as defined on input as well as moving the cursor up as long as the passed position is not currently greater than zero.
 
