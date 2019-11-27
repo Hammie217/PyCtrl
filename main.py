@@ -1,8 +1,3 @@
-"""@package docstring
-Documentation for this module.
- 
-More details.
-"""
 import sys, tty, termios
 
 
@@ -14,7 +9,7 @@ def cursorUp(val):
 
     INPUT
 
-    one integer greater than zero
+    val -one integer greater than zero
 
     RETURNS
 
@@ -27,6 +22,19 @@ def cursorUp(val):
 
 
 def cursorDown(val):
+    """
+    PURPOSE
+ 
+    Moves console cursor down by defined value
+
+    INPUT
+
+    val -one integer greater than zero
+
+    RETURNS
+
+    0 for success and -1 for error
+    """
     if isinstance(val, int) and val > 0:
         print_cursor_value(val, "B")
         return 0
@@ -34,6 +42,19 @@ def cursorDown(val):
 
 
 def cursorRight(val):
+    """
+    PURPOSE
+ 
+    Moves console cursor right by defined value
+
+    INPUT
+
+    val -one integer greater than zero
+
+    RETURNS
+
+    0 for success and -1 for error
+    """
     if isinstance(val, int) and val > 0:
         print_cursor_value(val, "C")
         return 0
@@ -41,6 +62,19 @@ def cursorRight(val):
 
 
 def cursorLeft(val):
+    """
+    PURPOSE
+ 
+    Moves console cursor left by defined value
+
+    INPUT
+
+    val -one integer greater than zero
+
+    RETURNS
+
+    0 for success and -1 for error
+    """
     if isinstance(val, int) and val > 0:
         print_cursor_value(val, "D")
         return 0
@@ -48,11 +82,38 @@ def cursorLeft(val):
 
 
 def print_cursor_value(val, letter):
+    """
+    PURPOSE
+ 
+    Function designed for printing special [ANSI Escape Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Terminal_input_sequences). The value and letter are concatenated to the escape character before being printed to the console.
+
+    INPUT
+
+    val - no verification and validation
+    letter - no verification and validation
+
+    RETURNS
+
+    None
+    """
     unicode_prefix = u"\u001b["
     print(f'{unicode_prefix}{val}{letter}', end='')
 
 
 def setColor(val):
+    """
+    PURPOSE
+ 
+    Defines the console cursor color
+
+    INPUT
+
+    val - one string from list (Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Reset)
+
+    RETURNS
+
+    0 for success and -1 for error
+    """
     if isinstance(val, str):
         val = val.upper()
         colors = {"BLACK": "\u001b[30m",
@@ -71,20 +132,75 @@ def setColor(val):
 
 
 def printList(arr):
+    """
+    PURPOSE
+ 
+    Prints array passed with one element on each line before returning.
+
+    INPUT
+
+    arr - array of strings to be printed
+
+    RETURNS
+
+    None
+    """
     for word in arr:
         print(f"  {word}", end="\n\r")
-    cursorUp(len(arr))
 
 
 def hideCursor():
+    """
+    PURPOSE
+ 
+    Hide the console cursor.
+
+    INPUT
+
+    None
+
+    RETURNS
+
+    None
+    """
     print("\u001b[?25l", end='')
 
 
 def resetCursor():
+    """
+    PURPOSE
+ 
+    Resets the console cursor to on.
+
+    INPUT
+
+    None
+
+    RETURNS
+
+    None
+    """
     print("\u001b[?0l", end='')
 
 
+
 def onCharUp(cursorColor, position):
+     """
+    PURPOSE
+ 
+    \warning {This function is designed to be private, it may be used elswhere if useful hence the lack of attempt to hide}
+
+    This function sets the curson color as defined on input as well as moving the cursor up as long as the passed position is not currently greater than zero.
+
+    INPUT
+
+    cursorColor - Colors defined in setColor
+    position - current cursor position
+
+    RETURNS
+    
+    position - new position after movement
+    """
     if position > 0:
         print(" ", end="")
         cursorLeft(1)
@@ -99,6 +215,23 @@ def onCharUp(cursorColor, position):
 
 
 def onDownChar(arrL, cursorColor, position):
+    """
+    PURPOSE
+ 
+    \warning {This function is designed to be private, it may be used elswhere if useful hence the lack of attempt to hide}
+
+    This function sets the curson color as defined on input as well as moving the cursor down as long as the passed position is not currently at the length of the passed array length.
+
+    INPUT
+
+    arrL - Length of array printed
+    cursorColor - Colors defined in setColor
+    position - current cursor position
+
+    RETURNS
+    
+    position - new position after movement
+    """
     if position < arrL:
         print(" ", end="")
         cursorLeft(1)
@@ -112,6 +245,19 @@ def onDownChar(arrL, cursorColor, position):
 
 
 def get_input_char():
+    """
+    PURPOSE
+ 
+    Gets single key input from the user
+
+    INPUT
+
+    None
+
+    RETURNS
+
+    key buffer after press
+    """
     return ord(sys.stdin.read(1))
 
 
@@ -124,6 +270,8 @@ def singleChoice(arr, cursorColor="Blue", textOrVal="Val"):
     # read output
     charIn = 0
     printList(arr)
+    cursorUp(len(arr))
+
     hideCursor()
     position = 0
     setColor(cursorColor)
@@ -230,7 +378,7 @@ def multiChoice(arr, cursorColor="Blue", textOrVal="Val", tickOrCross="T", other
         return positionList
 
 
-#valArray=["Choice1","Choice2","Choice3"]
-#print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
-#valArray=["Choice1","Choice2","Choice3"]
-#print(singleChoice(valArray,"Magenta","Text"),)#
+# valArray=["Choice1","Choice2","Choice3"]
+# print(*multiChoice(valArray,"Red","Text","f","Magenta"), sep='\n')
+# valArray=["Choice1","Choice2","Choice3"]
+# print(singleChoice(valArray,"Magenta","Text"),)
