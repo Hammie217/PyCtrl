@@ -185,7 +185,7 @@ def resetCursor():
 
 
 def onCharUp(cursorColor, position):
-     """
+    """
     PURPOSE
  
     \warning {This function is designed to be private, it may be used elswhere if useful hence the lack of attempt to hide}
