@@ -65,7 +65,7 @@ def test_printList_prints_words_to_std_out(capfd):
     arr = ["Choice1", "Choice2", "Choice3"]
     printList(arr)
     out, err = capfd.readouterr()
-    assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r\x1b[3A"
+    assert out == "  Choice1\n\r  Choice2\n\r  Choice3\n\r"
 
 
 #--------------------------------MultiChoice--------------------------------#
